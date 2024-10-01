@@ -1,10 +1,15 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:16'
+        }
+    }
     stages {
         stage('Install Dependencies') {
             steps {
                 script {
                     checkout scm
+                    sh 'npm install --save'
                 }
             }
         }
@@ -18,7 +23,8 @@ pipeline {
         stage('Snyk Scan') {
             steps {
                 script {
-                    echo 'Tests run successfully.'
+                    sh 'npm install -g snyk'
+                    sh 'snyk test'
                 }
             }
         }
